@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class Deck : MonoBehaviour {
 
 	[Header("Set in Inspector")]
+	public bool startFaceUp = false;
 	//Suits
 	public Sprite suitClub;
 	public Sprite suitDiamond;
@@ -281,13 +282,31 @@ public class Deck : MonoBehaviour {
 	_tSR.sortingOrder = 2;
 	_tGO.name = "back";
 	card.back = _tGO;
-	card.faceUp = false;
-
-cards.Add(card);
+	card.faceUp = startFaceUp;
 		} // for all the Cardnames	
-	} // makeCards
+		  // makeCards
 
+	static public void Shuffle(ref List<Card> oCards)
+	{
+		List<Card> tCards = new List<Card>();
 
+		int ndx;
+
+		tCards = new List<Card>();
+
+		while (oCards.Count > 0)
+		{
+			ndx = Random.Range(0, oCards.Count);
+			tCards.Add(oCards[ndx]);
+			oCards.RemoveAt(ndx);
+		}
+
+		oCards = tCards;
+
+		//because oCards is a ref parameter, the changes made are propogated back
+		//for ref paramters changes made in the function persist.
+
+	}
 	private void AddFace(Card card)
 	{
 		if (card.def.face == "")
@@ -354,27 +373,7 @@ cards.Add(card);
 		return (null);  // couldn't find the sprite (should never reach this line)
 	}// getFace 
 
-	static public void Shuffle(ref List<Card> oCards)
-	{
-		List<Card> tCards = new List<Card>();
-
-		int ndx;   // which card to move
-
-		while (oCards.Count > 0)
-		{
-			// find a random card, add it to shuffled list and remove from original deck
-			ndx = Random.Range(0, oCards.Count);
-			tCards.Add(oCards[ndx]);
-			oCards.RemoveAt(ndx);
-		}
-
-		oCards = tCards;
-
-		//because oCards is a ref parameter, the changes made are propogated back
-		//for ref paramters changes made in the function persist.
-
-
-	}
+	
 
 
 }
