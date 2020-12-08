@@ -44,3 +44,11 @@ The following packages were added:
   com.unity.textmeshpro@3.0.1
   com.unity.timeline@1.3.5
   com.unity.ugui@1.0.0
+
+=== Mon Dec  7 18:20:56 2020
+
+Packages were changed.
+Update Mode: resetToDefaultDependencies
+
+The following packages were removed:
+  com.unity.2d.sprite@1.0.0

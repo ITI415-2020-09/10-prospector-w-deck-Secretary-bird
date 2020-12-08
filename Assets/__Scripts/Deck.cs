@@ -2,7 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Deck : MonoBehaviour {
+public class Deck : MonoBehaviour
+{
 
 	[Header("Set in Inspector")]
 	public bool startFaceUp = false;
@@ -31,16 +32,18 @@ public class Deck : MonoBehaviour {
 	// add from p 569
 	public List<string> cardNames;
 	public List<Card> cards;
-	public List<Decorator> decorators;
-	public List<CardDefinition> cardDefs;
+	public List<Card.Decorator> decorators;
+	public List<Card.CardDefinition> cardDefs;
 	public Transform deckAnchor;
 	public Dictionary<string, Sprite> dictSuits;
 
 
 	// called by Prospector when it is ready
-	public void InitDeck(string deckXMLText) {
+	public void InitDeck(string deckXMLText)
+	{
 		// from page 576
-		if (GameObject.Find("_Deck") == null) {
+		if (GameObject.Find("_Deck") == null)
+		{
 			GameObject anchorGO = new GameObject("_Deck");
 			deckAnchor = anchorGO.transform;
 		}
@@ -77,13 +80,14 @@ public class Deck : MonoBehaviour {
 
 		//Read decorators for all cards
 		// these are the small numbers/suits in the corners
-		decorators = new List<Decorator>();
+		decorators = new List<Card.Decorator>();
 		// grab all decorators from the XML file
 		PT_XMLHashList xDecos = xmlr.xml["xml"][0]["decorator"];
-		Decorator deco;
-		for (int i = 0; i < xDecos.Count; i++) {
+		Card.Decorator deco;
+		for (int i = 0; i < xDecos.Count; i++)
+		{
 			// for each decorator in the XML, copy attributes and set up location and flip if needed
-			deco = new Decorator();
+			deco = new Card.Decorator();
 			deco.type = xDecos[i].att("type");
 			deco.flip = (xDecos[i].att("flip") == "1");   // too cute by half - if it's 1, set to 1, else set to 0
 			deco.scale = float.Parse(xDecos[i].att("scale"));
@@ -95,25 +99,29 @@ public class Deck : MonoBehaviour {
 
 		// read pip locations for each card rank
 		// read the card definitions, parse attribute values for pips
-		cardDefs = new List<CardDefinition>();
+		cardDefs = new List<Card.CardDefinition>();
 		PT_XMLHashList xCardDefs = xmlr.xml["xml"][0]["card"];
 
-		for (int i = 0; i < xCardDefs.Count; i++) {
+		for (int i = 0; i < xCardDefs.Count; i++)
+		{
 			// for each carddef in the XML, copy attributes and set up in cDef
-			CardDefinition cDef = new CardDefinition();
+			Card.CardDefinition cDef = new Card.CardDefinition();
 			cDef.rank = int.Parse(xCardDefs[i].att("rank"));
 
 			PT_XMLHashList xPips = xCardDefs[i]["pip"];
-			if (xPips != null) {
-				for (int j = 0; j < xPips.Count; j++) {
-					deco = new Decorator();
+			if (xPips != null)
+			{
+				for (int j = 0; j < xPips.Count; j++)
+				{
+					deco = new Card.Decorator();
 					deco.type = "pip";
 					deco.flip = (xPips[j].att("flip") == "1");   // too cute by half - if it's 1, set to 1, else set to 0
 
 					deco.loc.x = float.Parse(xPips[j].att("x"));
 					deco.loc.y = float.Parse(xPips[j].att("y"));
 					deco.loc.z = float.Parse(xPips[j].att("z"));
-					if (xPips[j].HasAtt("scale")) {
+					if (xPips[j].HasAtt("scale"))
+					{
 						deco.scale = float.Parse(xPips[j].att("scale"));
 					}
 					cDef.pips.Add(deco);
@@ -122,16 +130,20 @@ public class Deck : MonoBehaviour {
 
 			// if it's a face card, map the proper sprite
 			// foramt is ##A, where ## in 11, 12, 13 and A is letter indicating suit
-			if (xCardDefs[i].HasAtt("face")) {
+			if (xCardDefs[i].HasAtt("face"))
+			{
 				cDef.face = xCardDefs[i].att("face");
 			}
 			cardDefs.Add(cDef);
 		} // for i < xCardDefs.Count
 	} // ReadDeck
 
-	public CardDefinition GetCardDefinitionByRank(int rnk) {
-		foreach (CardDefinition cd in cardDefs) {
-			if (cd.rank == rnk) {
+	public Card.CardDefinition GetCardDefinitionByRank(int rnk)
+	{
+		foreach (Card.CardDefinition cd in cardDefs)
+		{
+			if (cd.rank == rnk)
+			{
 				return (cd);
 			}
 		} // foreach
@@ -139,12 +151,15 @@ public class Deck : MonoBehaviour {
 	}//GetCardDefinitionByRank
 
 
-	public void MakeCards() {
+	public void MakeCards()
+	{
 		// stub Add the code from page 577 here
 		cardNames = new List<string>();
 		string[] letters = new string[] { "C", "D", "H", "S" };
-		foreach (string s in letters) {
-			for (int i = 0; i < 13; i++) {
+		foreach (string s in letters)
+		{
+			for (int i = 0; i < 13; i++)
+			{
 				cardNames.Add(s + (i + 1));
 			}
 		}
@@ -158,7 +173,8 @@ public class Deck : MonoBehaviour {
 		}
 	}
 
-	private Card MakeCard(int cNum) {
+	private Card MakeCard(int cNum)
+	{
 
 		GameObject cgo = Instantiate(prefabCard) as GameObject;
 		cgo.transform.parent = deckAnchor;
@@ -184,13 +200,13 @@ public class Deck : MonoBehaviour {
 
 
 	// temp variables
-		private Sprite _tSp = null;
-		private GameObject _tGO = null;
-		private SpriteRenderer _tSR = null;  // so tempted to make a D&D ref here...
+	private Sprite _tSp = null;
+	private GameObject _tGO = null;
+	private SpriteRenderer _tSR = null;  // so tempted to make a D&D ref here...
 
 	private void AddDecorators(Card card)
 	{
-		foreach (Decorator deco in decorators)
+		foreach (Card.Decorator deco in decorators)
 		{
 			if (deco.type == "suit")
 			{
@@ -224,7 +240,7 @@ public class Deck : MonoBehaviour {
 
 	private void AddPips(Card card)
 	{
-		foreach (Decorator pip in card.def.pips)
+		foreach (Card.Decorator pip in card.def.pips)
 		{
 			_tGO = Instantiate(prefabSprite) as GameObject;
 			_tGO.transform.SetParent(card.transform);
@@ -248,7 +264,7 @@ public class Deck : MonoBehaviour {
 	{
 		if (card.def.face == "")
 		{
-			return; 
+			return;
 		}
 
 		_tGO = Instantiate(prefabSprite) as GameObject;
@@ -272,19 +288,20 @@ public class Deck : MonoBehaviour {
 		return (null);
 	}
 
-	private void AddBack(Card card) { 
+	private void AddBack(Card card)
+	{
 
-	_tGO = Instantiate(prefabSprite) as GameObject;
-	_tSR = _tGO.GetComponent<SpriteRenderer>();
-	_tSR.sprite = cardBack;
-	_tGO.transform.SetParent(card.transform);
-	_tGO.transform.localPosition = Vector3.zero;
-	_tSR.sortingOrder = 2;
-	_tGO.name = "back";
-	card.back = _tGO;
-	card.faceUp = startFaceUp;
-		} // for all the Cardnames	
-		  // makeCards
+		_tGO = Instantiate(prefabSprite) as GameObject;
+		_tSR = _tGO.GetComponent<SpriteRenderer>();
+		_tSR.sprite = cardBack;
+		_tGO.transform.SetParent(card.transform);
+		_tGO.transform.localPosition = Vector3.zero;
+		_tSR.sortingOrder = 2;
+		_tGO.name = "back";
+		card.back = _tGO;
+		card.faceUp = startFaceUp;
+	} // for all the Cardnames	
+	  // makeCards
 
 	static public void Shuffle(ref List<Card> oCards)
 	{
@@ -307,74 +324,6 @@ public class Deck : MonoBehaviour {
 		//for ref paramters changes made in the function persist.
 
 	}
-	private void AddFace(Card card)
-	{
-		if (card.def.face == "")
-		{
-			return;
-		}
-			for (int i = 0; i < cardNames.Count; i++) {
-			GameObject cgo = Instantiate(prefabCard) as GameObject;
-			cgo.transform.parent = deckAnchor;
-			Card card = cgo.GetComponent<Card>();
-
-			cgo.transform.localPosition = new Vector3(i % 13 * 3, i / 13 * 4, 0);
-
-			card.name = cardNames[i];
-			card.suit = card.name[0].ToString();
-			card.rank = int.Parse(card.name.Substring(1));
-
-			if (card.suit == "D" || card.suit == "H") {
-				card.colS = "Red";
-				card.color = Color.red;
-			}
-
-			card.def = GetCardDefinitionByRank(card.rank);
-
-			private void AddDecorators(Card card) {
-				foreach (Decorator deco in decorators) {
-					tGO = Instantiate(prefabSprite) as GameObject;
-					tSR = tGO.GetComponent<SpriteRenderer>();
-					if (deco.type == "suit") {
-						tSR.sprite = dictSuits[card.suit];
-					} else { // it is a rank
-						tS = rankSprites[card.rank];
-						tSR.sprite = tS;
-						tSR.color = card.color;
-					}
-
-					tSR.sortingOrder = 1;                     // make it render above card
-					tGO.transform.parent = cgo.transform;     // make deco a child of card GO
-					tGO.transform.localPosition = deco.loc;   // set the deco's local position
-
-					if (deco.flip) {
-						tGO.transform.rotation = Quaternion.Euler(0, 0, 180);
-					}
-
-					if (deco.scale != 1) {
-						tGO.transform.localScale = Vector3.one * deco.scale;
-					}
-
-					tGO.name = deco.type;
-
-					card.decoGOs.Add(tGO);
-				} // foreach Deco
-			}
-
-			
-
-	//Find the proper face card
-	public Sprite GetFace(string faceS) {
-		foreach (Sprite tS in faceSprites) {
-			if (tS.name == faceS) {
-				return (tS);
-			}
-		}//foreach	
-		return (null);  // couldn't find the sprite (should never reach this line)
-	}// getFace 
-
-	
 
 
 }
-}// Deck class

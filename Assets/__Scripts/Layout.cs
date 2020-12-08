@@ -24,7 +24,7 @@ public class Layout : MonoBehaviour
     public List<SlotDef> slotDefs;
     public SlotDef drawPile;
     public SlotDef discardPile;
-    public string[] sortingLayerNames = new string[] { "Row0","Row1", "Row2", "Row3", "Discard", "Draw" };
+    public string[] sortingLayerNames = new string[] { "Row0", "Row1", "Row2", "Row3", "Discard", "Draw" };
 
     public void ReadLayout(string xmlText)
     {
@@ -48,7 +48,8 @@ public class Layout : MonoBehaviour
             }
             tSD.x = float.Parse(slotsX[i].att("x"));
             tSD.y = float.Parse(slotsX[i].att("y"));
-            tSD.layerID = int.Parse(slotsX[i].att("layer"));            tSD.layerName = sortingLayerNames[tSD.layerID];
+            tSD.layerID = int.Parse(slotsX[i].att("layer"));
+            tSD.layerName = sortingLayerNames[tSD.layerID];
             switch (tSD.type)
             {
                 case "slot":
@@ -64,18 +65,19 @@ public class Layout : MonoBehaviour
 
                     }
 
-            slotDefs.Add(tSD);
-            break;
-        
-            case "drawpile":
-			tSD.stagger.x = float.Parse(slotsX[i].att("xstagger"));
-            drawPile = tSD;
-            break;
-			case	"discardpile":
-			discardPile = tSD;
-            break;
+                    slotDefs.Add(tSD);
+                    break;
+
+                case "drawpile":
+                    tSD.stagger.x = float.Parse(slotsX[i].att("xstagger"));
+                    drawPile = tSD;
+                    break;
+                case "discardpile":
+                    discardPile = tSD;
+                    break;
+
+            }
         }
+
     }
-          
-}
 }
